@@ -6,7 +6,7 @@
 #include "personnage.h"
 
 
-
+////////////////////////////////////////////*************************************************************************
 personnage initialisePerso( personnage p )
 {
         p.sprite=IMG_Load("perso.png");
@@ -33,81 +33,161 @@ personnage initialisePerso( personnage p )
 return p;
 }
 
-
-
-personnage evolutionPerso( personnage p, int hauteur_max, int hauteur_min,int x_saut)
- 
-
-{if (p.sauter==1 && p.descendre==0)
- {
-   if (p.direction==0)
-   { if (p.posScreen.x<200)
-       { p.posScreen.y-=2;
-         p.posScreen.x+=2;
-printf("right 1\n");
-       }
-     else 
-       { p.poseecran_1.y-=2;
-         p.poseecran_1.x+=2;
-       }          
-   }
-   else if (p.direction==1)
- {  if (p.posScreen.x<200)
-    {
-    p.posScreen.y-=2;
-    p.posScreen.x-=2;
-    }
-    else 
-    {p.poseecran_1.y-=2;
-     p.poseecran_1.x-=2;
-    }
- }
-
-    if ( p.posScreen.y <= hauteur_max || p.poseecran_1.y<=hauteur_max)
-    {
-      
-        p.descendre = 1;
-    }
-}
-if (p.descendre==1 )
+////////////////////////////////////////////*************************************************************************
+personnage movePerso(personnage p)
 {
-  if (p.direction==0)
-  {
-if (p.posScreen.x<200)
-      {printf("rigth 2 \n"); 
-       p.posScreen.y+=2;
-       p.posScreen.x+=2;}
-   else
-       {
-     p.poseecran_1.y+=2;
-     p.poseecran_1.x+=2;
-       }
-  }
- else if (p.direction==1)
- { if (x_saut<200)
- {p.posScreen.y+=2;
-    p.posScreen.x-=2;}
-else {p.poseecran_1.y+=2;
-     p.poseecran_1.x-=2;}
-}
-printf(" avant final p.posScreen.y %d hauteur_min %d  p.poseecran_1.y %d  p.posScreen.x %d p.poseecran_1.x %d, x_saut %d \n ", p.posScreen.y, hauteur_min, p.poseecran_1.y,p.posScreen.x , p.poseecran_1.x, x_saut);
-    if ( (p.posScreen.x<200 && p.posScreen.y == hauteur_min && x_saut<200 ) )
-    {   
-        printf(" entred boucle fin1");
-printf(" p.posScreen.y %d hauteur_min %d  p.poseecran_1.y %d \n ", p.posScreen.y, hauteur_min, p.poseecran_1.y);
-        p.sauter=0;
-        p.descendre = 0;
 
-    }
-else if (x_saut>=200 &&  p.poseecran_1.x>200  && p.posScreen.x>=200 && p.poseecran_1.y== hauteur_min)
-{printf(" entred boucle fin2"); printf(" p.posScreen.y %d hauteur_min %d  p.poseecran_1.y %d \n ", p.posScreen.y, hauteur_min, p.poseecran_1.y);
+if (p.direction ==0)
+p.posScreen.x=p.posScreen.x+3;
+
+if (p.direction ==1 || (p.direction ==1 && p.poseecran_1.x<=200))
+p.posScreen.x=p.posScreen.x-3;
+
+return p;
+}
+
+
+
+
+
+////////////////////////////////////////////*************************************************************************
+
+personnage sauterPersomonter(personnage p, int hauteur_max, int hauteur_min,int x_saut)
+{  
+
+	if (p.sauter==1 && p.descendre==0)
+ 	{
+   		if (p.direction==0)
+   		{ 
+     		 p.posScreen.y=p.posScreen.y-2;
+      		 p.posScreen.x=p.posScreen.x+2;
+
+    		}
+    
+   		else if (p.direction==1 )
+   		{  
+    		p.posScreen.y=p.posScreen.y-2;
+    		p.posScreen.x=p.posScreen.x-2;
+    
+   		}
+	
+
+    		if ( p.posScreen.y <= hauteur_max)
+    		{
+        	p.descendre = 1;
+    		}
+	}
+
+ return p;
+}
+
+////////////////////////////////////////////*************************************************************************
+personnage sauterPersodescendre(personnage p, int hauteur_max, int hauteur_min,int x_saut)
+{
+	if (p.direction==0)
+  	{
+       	p.posScreen.y+=2;
+       	p.posScreen.x+=2;
+   
+  	}
+	else if (p.direction==1)
+  	{ 
+       	p.posScreen.y+=2;
+       	p.posScreen.x-=2;
+  	}
+
+    	if (p.posScreen.y == hauteur_min )
+    	{   
         p.sauter=0;
         p.descendre = 0;
+    	}
+
+return p;
 }
- }
-printf("  end function sauter %d descendre %d \n", p.sauter,p.descendre );
-  return p;
+
+
+////////////////////////////////////////////*************************************************************************
+
+personnage scrollingPersomonter(personnage p, int hauteur_max, int hauteur_min,int x_saut, int back_w)
+{
+
+
+if (p.sauter==1 && p.descendre==0)
+ 	{
+   		if (p.direction==0)
+
+   		{ 
+		  if (p.poseecran_1.x ==7250)// condition rebouclage scrolling
+                      p.poseecran_1.x=201;
+     		 p.poseecran_1.y=p.poseecran_1.y-2;
+      		 p.poseecran_1.x=p.poseecran_1.x+2;
+
+    		}
+    
+   		else if (p.direction==1 && p.poseecran_1.x>200)
+   		{  
+                      
+    		p.poseecran_1.y=p.poseecran_1.y-2;
+    		p.poseecran_1.x=p.poseecran_1.x-2;
+    
+   		}
+	
+
+    		if ( p.poseecran_1.y <= hauteur_max)
+    		{
+        	p.descendre = 1;
+    		}
+	}
+
+return p; 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////////*************************************************************************
+personnage scrollingPersodescendre(personnage p, int hauteur_max, int hauteur_min,int x_saut, int back_w)
+{      
+       
+
+
+	if (p.direction==0)
+  	{
+	if (p.poseecran_1.x ==7250)// condition rebouclage scrolling
+        p.poseecran_1.x=201;
+
+       	p.poseecran_1.y+=2;
+       	p.poseecran_1.x+=2;
+   
+  	}
+	else if (p.direction==1 && p.poseecran_1.x>200)
+  	{ 
+	
+       	p.poseecran_1.y+=2;
+       	p.poseecran_1.x-=2;
+  	}
+
+    	if (p.poseecran_1.y == hauteur_min )
+    	{   
+        p.sauter=0;
+        p.descendre = 0;
+    	}
+
+return p;
+}
+////////////////////////////////////////////*************************************************************************
+
 
 
 
@@ -150,14 +230,4 @@ return p;
 }
 
 
-personnage movePerso(personnage p)
-{
 
-if (p.direction ==0)
-p.posScreen.x=p.posScreen.x+3;
-
-if (p.direction ==1)
-p.posScreen.x=p.posScreen.x-3;
-
-return p;
-}

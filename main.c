@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     SDL_Surface *ecran = NULL;
     SDL_Surface *back;
 
-
+char text[100];
 
     SDL_Rect posecran;
     SDL_Rect marge_scroll;
@@ -69,16 +69,9 @@ int main(int argc, char *argv[])
 
 while (continuer)
     {
-       direction=3;
-if (perso.posScreen.x<200)
-	{SDL_BlitSurface(back,&perso.poseecran_1,ecran,&posecran);
-	SDL_BlitSurface(perso.sprite,&perso.posSprite,ecran,&perso.posScreen);}
-else 
-{
-
+        direction=3;
         SDL_BlitSurface(back,&perso.poseecran_1,ecran,&posecran);
 	SDL_BlitSurface(perso.sprite,&perso.posSprite,ecran,&perso.posScreen);
-}
         SDL_Flip(ecran);
 
  SDL_PollEvent(&event);
@@ -115,27 +108,50 @@ else
         }
 
 
+
+///////////////// avanver 
 if (direction ==1 ||direction==0 )
-{if (perso.posScreen.x<200)
-perso=movePerso(perso);
-else {
-if (perso.direction==0)
-perso.poseecran_1.x+=3;
-else perso.poseecran_1.x-=3;
-}
-perso=animatePerso(perso, direction);
-}
-
-if (perso.sauter==1)
 {
-perso=evolutionPerso( perso,  hauteur_max, hauteur_min, x_saut);
+    if (perso.posScreen.x<200 || (perso.poseecran_1.x <=200 && perso.direction==1 ))// move no scrolling 
+          perso=movePerso(perso);
+
+
+    else {                               // move with scrolling 
+
+	  if (perso.direction==0)
+           { 
+		if (perso.poseecran_1.x ==7250)// condition rebouclage scrolling 
+                 perso.poseecran_1.x=201;
+	    perso.poseecran_1.x+=3;
+	   }
+          else 
+            perso.poseecran_1.x-=3;
+         }
+
+
+    perso=animatePerso(perso, direction);
 }
 
+///////////// sauter BEFORE SCROLLING 
+
+if (perso.sauter==1 && perso.descendre==0 &&  x_saut <=200 )   // monter 
+	perso=   sauterPersomonter(perso,  hauteur_max, hauteur_min, x_saut);
+        
+
+if (perso.sauter==1 && perso.descendre==1 &&  x_saut <=200)// descendre
+
+	perso=   sauterPersodescendre(perso,  hauteur_max, hauteur_min, x_saut);
 
 
+//////////////// SAUTER AFTER SCROLLING 
 
+if (perso.sauter==1 && perso.descendre==0 &&  x_saut >200)   // monter 
+	perso=   scrollingPersomonter(perso,  hauteur_max, hauteur_min, x_saut, back->w);
+        
 
+if (perso.sauter==1 && perso.descendre==1 &&  x_saut >200)// descendre 
 
+	perso=   scrollingPersodescendre(perso,  hauteur_max, hauteur_min, x_saut, back->w);
 
  }
 
