@@ -15,10 +15,10 @@ personnage initialisePerso( personnage p )
 	p.direction=0;
 
 	p.posScreen.x=0;
-	p.posScreen.y=230;
+	p.posScreen.y=200;
         // scrolling 
 	p.poseecran_1.x=200;
-        p.poseecran_1.y=230;
+        p.poseecran_1.y=200;
         //
 	p.posSprite.x=0;
 	p.posSprite.y =0;
@@ -116,8 +116,8 @@ if (p.sauter==1 && p.descendre==0)
  	{
    		if (p.direction==0)
 
-   		{ 
-		  if (p.poseecran_1.x ==7250)// condition rebouclage scrolling
+   		{ printf("p.poseecran_1.x %d ***** 7000\n ", p.poseecran_1.x);
+		  if (p.poseecran_1.x >=7000)// condition rebouclage scrolling
                       p.poseecran_1.x=201;
      		 p.poseecran_1.y=p.poseecran_1.y-2;
       		 p.poseecran_1.x=p.poseecran_1.x+2;
@@ -164,7 +164,7 @@ personnage scrollingPersodescendre(personnage p, int hauteur_max, int hauteur_mi
 
 	if (p.direction==0)
   	{
-	if (p.poseecran_1.x ==7250)// condition rebouclage scrolling
+	if (p.poseecran_1.x >=7000)// condition rebouclage scrolling
         p.poseecran_1.x=201;
 
        	p.poseecran_1.y+=2;

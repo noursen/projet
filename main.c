@@ -120,7 +120,7 @@ if (direction ==1 ||direction==0 )
 
 	  if (perso.direction==0)
            { 
-		if (perso.poseecran_1.x ==7250)// condition rebouclage scrolling 
+		if (perso.poseecran_1.x >=7000)// condition rebouclage scrolling 
                  perso.poseecran_1.x=201;
 	    perso.poseecran_1.x+=3;
 	   }
