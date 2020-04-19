@@ -15,10 +15,10 @@ personnage initialisePerso( personnage p )
 	p.direction=0;
 
 	p.posScreen.x=0;
-	p.posScreen.y=230;
+	p.posScreen.y=260;
         // scrolling 
 	p.poseecran_1.x=200;
-        p.poseecran_1.y=230;
+        p.poseecran_1.y=200;
         //
 	p.posSprite.x=0;
 	p.posSprite.y =0;

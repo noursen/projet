@@ -25,8 +25,8 @@ int main(int argc, char *argv[])
     int continuer = 1;
     int direction=0;
     
-    int hauteur_max=160;
-    int hauteur_min=230;
+    int hauteur_max=120;
+    int hauteur_min=200;
     SDL_Init(SDL_INIT_VIDEO);
     int x_saut;
    
