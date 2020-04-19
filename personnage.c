@@ -38,10 +38,10 @@ personnage movePerso(personnage p)
 {
 
 if (p.direction ==0 && p.posScreen.x<200 )
-p.posScreen.x=p.posScreen.x+1;
+p.posScreen.x=p.posScreen.x+3;
 
 if (p.direction ==1 || (p.direction ==1 && p.poseecran_1.x<200))
-p.posScreen.x=p.posScreen.x-1;
+p.posScreen.x=p.posScreen.x-3;
 
 return p;
 }
