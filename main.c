@@ -210,11 +210,11 @@ if (perso.sauter==1 && perso.descendre==1 &&  perso.posScreen.x ==200 && perso.p
      } 
 dt =SDL_GetTicks()-t_prev; 
 if (perso.acceleration>0 )
- perso.acceleration-=0.017;
+ perso.acceleration-=0.035;
   
 
-if (1000/fps >dt)
- SDL_Delay(1000/fps-dt);
+/*if (1000/fps >dt)
+ SDL_Delay(1000/fps-dt);*/
 /*printf("\n l acceleration est %f , la vitesse est %f ",perso.acceleration,perso.velocity);*/}
 
 
