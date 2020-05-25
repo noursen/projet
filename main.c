@@ -4,7 +4,8 @@
 #include<SDL/SDL_mixer.h>
 #include <SDL/SDL_ttf.h>
 #include "personnage.h"
-/*testtttt*/
+
+
 
 
 
@@ -19,33 +20,36 @@ int main(int argc, char *argv[])
 
 
 
+
+
+
+
+
+
+
     SDL_Rect posecran;
-    SDL_Rect marge_scroll;
+    posecran.x=0;
+    posecran.y=0;
+   
     SDL_Event event;
     int continuer = 1;
     int direction=0;
-    
+    Uint32 t_prev, dt=1; 
     int hauteur_max=120;
     int hauteur_min=200;
     SDL_Init(SDL_INIT_VIDEO);
-    int x_saut;
+const unsigned int fps = 20;
    
-    posecran.x=0;
-    posecran.y=0;
+    
     back=IMG_Load("back_annimation.png");
-    posecran.w=back->w/11;
-    posecran.h=back->h-200;
-    marge_scroll.x=0;
-    marge_scroll.y=200;
-    marge_scroll.h=back->h-200;
-    marge_scroll.w=back->w/11;
+    
     
 
     ecran = SDL_SetVideoMode(back->w/11,back->h-200,32,  SDL_HWSURFACE);
 
-    SDL_WM_SetCaption("Gestion des événements en SDL", NULL);
+    SDL_WM_SetCaption("Hammadi el Botti", NULL);
 
-    SDL_BlitSurface(back,&marge_scroll,ecran,&posecran);
+
    /***************************************************************************/
 
 
@@ -67,12 +71,27 @@ int main(int argc, char *argv[])
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 while (continuer)
-    {
+    {   t_prev=SDL_GetTicks();
+ if(perso.acceleration<=0)
         direction=3;
+
+
         SDL_BlitSurface(back,&perso.poseecran_1,ecran,&posecran);
 	SDL_BlitSurface(perso.sprite,&perso.posSprite,ecran,&perso.posScreen);
         SDL_Flip(ecran);
+
 
  SDL_PollEvent(&event);
         switch(event.type)
@@ -86,12 +105,15 @@ while (continuer)
 
                     case SDLK_RIGHT:
                         direction=0;
-
+                        // perso.velocity+=0.0001;
+			perso.acceleration+=0.05;
                         break;
                     case SDLK_LEFT: // Flèche gauche
 
                         direction=1;
-  
+			//perso.velocity=5;
+  			perso.acceleration+=0.05 ;
+
 
                         break;
                    case SDLK_UP: ////// sauttttttterrrrrrrrrrr
@@ -99,7 +121,7 @@ while (continuer)
 
                    perso.sauter=1;
 
-                   x_saut=perso.posScreen.x;
+                  
 
 
                      break;
@@ -113,21 +135,27 @@ while (continuer)
 if (direction ==1 ||direction==0 )
 { 
     if (perso.posScreen.x<200 || (perso.poseecran_1.x <=200 && perso.direction==1 ))// move no scrolling 
-          {perso=movePerso(perso);
+          {perso=movePerso(perso, dt);
 	   perso.poseecran_1.x=200;
 	   }
 
     else {                               // move with scrolling 
 
-	  if (perso.direction==0)
-           { 
-		if (perso.poseecran_1.x >=7000)// condition rebouclage scrolling 
-                 perso.poseecran_1.x=201;
-	    perso.poseecran_1.x+=3;
-	   }
-          else 
-            perso.poseecran_1.x-=3;
-         perso.posScreen.x=200;}
+	  	if (perso.direction==0)
+           	{ 
+			if (perso.poseecran_1.x >=7000)// condition rebouclage scrolling 
+                 	perso.poseecran_1.x=201;
+	    	//perso.poseecran_1.x+=3;
+		perso.poseecran_1.x=perso.poseecran_1.x+perso.velocity*dt+ 0.5*perso.acceleration* dt*dt   ; 
+printf("\n ******%f pas ***********\n ", +perso.velocity*dt+ 0.5*perso.acceleration* dt*dt);
+	   	}
+          	else 
+            	//perso.poseecran_1.x-=3;
+		{perso.poseecran_1.x=perso.poseecran_1.x- perso.velocity*dt- 0.5*perso.acceleration* dt*dt ;
+		printf("\n ******%f pas dir 1 ***********\n ", +perso.velocity*dt+ 0.5*perso.acceleration* dt*dt);
+		}
+         perso.posScreen.x=200;
+         }
 
 
     perso=animatePerso(perso, direction);
@@ -136,13 +164,13 @@ if (direction ==1 ||direction==0 )
 
 if (perso.sauter==1 && perso.descendre==0 &&  perso.posScreen.x <200 && perso.poseecran_1.x<=200 )   // monter 
 	
-        { perso=   sauterPersomonter(perso,  hauteur_max, hauteur_min, x_saut);
+        { perso=   sauterPersomonter(perso,  hauteur_max, hauteur_min);
           perso.poseecran_1.x=200;
 
          }
 if (perso.sauter==1 && perso.descendre==1 &&  perso.posScreen.x <200 && perso.poseecran_1.x<=200 )// descendre
     { 
-	perso=   sauterPersodescendre(perso,  hauteur_max, hauteur_min, x_saut);
+	perso=   sauterPersodescendre(perso,  hauteur_max, hauteur_min);
 	perso.poseecran_1.x=200;
     }
 //// sauter between the too zones 
@@ -170,17 +198,24 @@ perso.poseecran_1.x=201;
 //////////////// SAUTER AFTER SCROLLING 
 
 if (perso.sauter==1 && perso.descendre==0 &&  perso.posScreen.x ==200 && perso.poseecran_1.x>200)  // monter 
-     {	perso=   scrollingPersomonter(perso,  hauteur_max, hauteur_min, x_saut, back->w);
+     {	perso=   scrollingPersomonter(perso,  hauteur_max, hauteur_min);
 	perso.posScreen.x=200;
        
      }   
 
 if (perso.sauter==1 && perso.descendre==1 &&  perso.posScreen.x ==200 && perso.poseecran_1.x>200 )// descendre 
      {
-	perso=   scrollingPersodescendre(perso,  hauteur_max, hauteur_min, x_saut, back->w);
+	perso=   scrollingPersodescendre(perso,  hauteur_max, hauteur_min);
         perso.posScreen.x=200;
      } 
- }
+dt =SDL_GetTicks()-t_prev; 
+if (perso.acceleration>0 )
+ perso.acceleration-=0.017;
+  
+
+if (1000/fps >dt)
+ SDL_Delay(1000/fps-dt);
+/*printf("\n l acceleration est %f , la vitesse est %f ",perso.acceleration,perso.velocity);*/}
 
 
 
@@ -189,5 +224,6 @@ if (perso.sauter==1 && perso.descendre==1 &&  perso.posScreen.x ==200 && perso.p
 
     return EXIT_SUCCESS;
 }
+
 
 

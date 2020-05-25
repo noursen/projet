@@ -6,6 +6,7 @@
 #include "personnage.h"
 
 
+
 ////////////////////////////////////////////*************************************************************************
 personnage initialisePerso( personnage p )
 {
@@ -24,9 +25,12 @@ personnage initialisePerso( personnage p )
 	p.posSprite.y =0;
 	p.posSprite.w =p.sprite->w/4;
 	p.posSprite.h =p.sprite->h/2;
-        
+        p.acceleration=0;
+	p.velocity=0.01;
 	p.sauter=0 ;
 	p.descendre=0;
+        
+      
 
 
 
@@ -34,15 +38,17 @@ return p;
 }
 
 ////////////////////////////////////////////*************************************************************************
-personnage movePerso(personnage p)
+personnage movePerso(personnage p ,Uint32 dt)
 {
+if (p.direction ==0  )
+p.posScreen.x=p.posScreen.x+p.velocity*dt+ 0.5*p.acceleration* dt*dt ; 
+printf("%f pas \n ", p.velocity*dt+ 0.5*p.acceleration*dt*dt );
 
-if (p.direction ==0 && p.posScreen.x<200 )
-p.posScreen.x=p.posScreen.x+3;
-
-if (p.direction ==1 || (p.direction ==1 && p.poseecran_1.x<200))
-p.posScreen.x=p.posScreen.x-3;
-
+if (p.direction ==1 )
+{
+p.posScreen.x=p.posScreen.x- p.velocity*dt- 0.5*p.acceleration* dt*dt  ;
+printf("%f pas dir 1 \n ", p.velocity*dt+ 0.5*p.acceleration*dt*dt );
+}
 return p;
 }
 
@@ -52,7 +58,7 @@ return p;
 
 ////////////////////////////////////////////*************************************************************************
 
-personnage sauterPersomonter(personnage p, int hauteur_max, int hauteur_min,int x_saut)
+personnage sauterPersomonter(personnage p, int hauteur_max, int hauteur_min)
 {  
 
 	if (p.sauter==1 && p.descendre==0)
@@ -61,20 +67,19 @@ personnage sauterPersomonter(personnage p, int hauteur_max, int hauteur_min,int 
    		{
                  if (p.poseecran_1.y > hauteur_max)
      		 p.poseecran_1.y=p.poseecran_1.y-1;
-                 if (p.posScreen.x<200 )
+                
       		 p.posScreen.x=p.posScreen.x+1;
 		
     		}
     
    		else if (p.direction==1 )
-   		{/*if (p.posScreen.x==200 && p.poseecran_1.x==200)
-		    {}*/
-              
-               /*else{*/ if (p.poseecran_1.y > hauteur_max)
+   		{
+              	if (p.poseecran_1.y > hauteur_max)
     		p.poseecran_1.y=p.poseecran_1.y-1;
+
     		p.posScreen.x=p.posScreen.x-1;
     
-   		}/*}*/
+   		}
 	
 
     		if ( p.poseecran_1.y == hauteur_max)
@@ -87,12 +92,12 @@ personnage sauterPersomonter(personnage p, int hauteur_max, int hauteur_min,int 
 }
 
 ////////////////////////////////////////////*************************************************************************
-personnage sauterPersodescendre(personnage p, int hauteur_max, int hauteur_min,int x_saut)
+personnage sauterPersodescendre(personnage p, int hauteur_max, int hauteur_min)
 {
 	if (p.direction==0)
   	{if (p.poseecran_1.y<hauteur_min)
        	p.poseecran_1.y+=1;
-	if (p.posScreen.x<200 )
+	//if (p.posScreen.x<200 )
        	p.posScreen.x+=1;
    
   	}
@@ -114,7 +119,7 @@ return p;
 
 ////////////////////////////////////////////*************************************************************************
 
-personnage scrollingPersomonter(personnage p, int hauteur_max, int hauteur_min,int x_saut, int back_w)
+personnage scrollingPersomonter(personnage p, int hauteur_max, int hauteur_min)
 {
 
 
@@ -132,11 +137,11 @@ if (p.sauter==1 && p.descendre==0)
 
     		}
     
-   		else if (p.direction==1 )//&& p.poseecran_1.x>200
+   		else if (p.direction==1 )
    		{  
                 if (p.poseecran_1.y > hauteur_max)     
     		p.poseecran_1.y=p.poseecran_1.y-1;
-		if (p.poseecran_1.x >=200)
+		
     		p.poseecran_1.x=p.poseecran_1.x-1;
     
    		}
@@ -167,7 +172,7 @@ return p;
 
 
 ////////////////////////////////////////////*************************************************************************
-personnage scrollingPersodescendre(personnage p, int hauteur_max, int hauteur_min,int x_saut, int back_w)
+personnage scrollingPersodescendre(personnage p, int hauteur_max, int hauteur_min)
 {      
        
 
@@ -182,12 +187,12 @@ personnage scrollingPersodescendre(personnage p, int hauteur_max, int hauteur_mi
    
   	}
 	else if (p.direction==1 )
-  	{ if (p.poseecran_1.x>=200)
-		{if (p.poseecran_1.y<hauteur_min)
+  	{ 
+		if (p.poseecran_1.y<hauteur_min)
        		p.poseecran_1.y+=1;
 		
        		p.poseecran_1.x-=1;
-		}
+		
 	  
   	}
         
@@ -241,6 +246,7 @@ p.cmpt=p.cmpt+1;
 
 return p;
 }
+
 
 
 
